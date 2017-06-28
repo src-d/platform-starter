@@ -41,6 +41,25 @@ If you want to force the install of all the dependencies with NPM use the `--npm
 platform-starter --npm
 ```
 
+### Tooling guide
+
+* We use **yarn** as package manager. If you want to use `npm` you can, but you must keep updated the `yarn.lock`.
+* All other configurations should be installed by this command.
+
+### Editor plugins
+
+**Vim/NeoVim**
+
+* CSSComb: [vim-csscomb](https://github.com/csscomb/vim-csscomb)
+* Editorconfig: [editorconfig-vim](https://github.com/editorconfig/editorconfig-vim)
+
+**Visual Studio Code**
+
+* CSSComb: [vscode-csscomb](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-csscomb)
+* Editorconfig: [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-csscomb)
+
+You're welcome to add more editors.
+
 ### Contributing
 
 If you changed any of the files in `config` and `hooks` remember to run `make` before committing to update the bindata.
