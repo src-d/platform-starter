@@ -45,7 +45,7 @@ fi
 # If there are whitespace errors, print the offending file names and fail.
 exec git diff-index --check --cached $against --
 
-MODIFIED_FILES=$(git diff --name-only HEAD~)
+MODIFIED_FILES=$(git diff --name-only HEAD~ | grep -v '.svg' | grep -v '.png' | grep -v '.jpg' | grep -v '.snap')
 
 # Check csscomb
 
