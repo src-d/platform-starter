@@ -17,6 +17,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "platform-starter"
 	app.Usage = "Initialize platform projects with common configuration."
+	app.Version = "1.0.0"
 	app.Action = run
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -177,6 +178,7 @@ func mkPath(args ...string) []string {
 func mustAsset(asset *asset, err error) *asset {
 	if err != nil {
 		log15.Crit(err.Error())
+		os.Exit(1)
 	}
 
 	return asset
