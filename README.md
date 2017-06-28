@@ -43,7 +43,7 @@ platform-starter --npm
 
 ### Tooling guide
 
-* We use **yarn** as package manager. If you want to use `npm` you can, but you must keep updated the `yarn.lock`.
+* We use **yarn** as package manager. You can use NPM to install global binaries, but installations of specific projects **must** be done with yarn.
 * All other configurations should be installed by this command.
 
 ### Editor plugins
