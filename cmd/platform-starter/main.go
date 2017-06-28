@@ -54,7 +54,7 @@ func (f file) path(root, wd string) string {
 
 var files = []file{
 	{mustAsset(configCsscombJson()), mkPath(".csscomb.json"), false},
-	{mustAsset(configEditorconfig()), mkPath(".editorconfig"), false},
+	{mustAsset(configEditorconfig()), mkPath(".editorconfig"), true},
 	{mustAsset(hooksPreCommit()), mkPath(".git", "hooks", "pre-commit"), true},
 }
 

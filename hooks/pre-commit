@@ -42,6 +42,13 @@ EOF
 	exit 1
 fi
 
+# If there are whitespace errors, print the offending file names and fail.
+exec git diff-index --check --cached $against --
+
+MODIFIED_FILES=$(git diff --name-only HEAD~)
+
+# Check csscomb
+
 CSSCOMB=$(which csscomb 2> /dev/null)
 if [[ -z "$CSSCOMB" ]]; then
         cat <<\EOF
@@ -59,11 +66,16 @@ EOF
         exit 1
 fi
 
-csscomb $(ls | grep -v node_modules | grep -v vendor)
-if [[ $? -ne 0 ]]; then
-        echo "Error formatting using csscomb, aborting commit."
-        exit 1
-fi
+# there might be multiple subdirectories with multiple csscomb configurations
+for csscomb_config in $(find . -name '.csscomb.json'); do
+        csscomb --config "$csscomb_config" --lint "$MODIFIED_FILES"
+        if [[ $? -ne 0 ]]; then
+                echo "Error formatting using csscomb, aborting commit."
+                exit 1
+        fi
+done
+
+# Check editorconfig
 
 EDITORCONFIG_TOOLS=$(which editorconfig-tools 2> /dev/null)
 if [[ -z "$EDITORCONFIG_TOOLS" ]]; then
@@ -82,12 +94,8 @@ EOF
         exit 1
 fi
 
-for file in $(ls | grep -v vendor | grep -v node_modules); do
-        if [[ -d "$file" ]]; then
-            editorconfig-tools check $(basename -- "$file/**/*")
-        else
-                editorconfig-tools check "$file"
-        fi
+for file in "$MODIFIED_FILES"; do
+        editorconfig-tools check "$file"
 
         if [[ $? -ne 0 ]]; then
                 cat <<\EOF
@@ -98,10 +106,6 @@ this by just using the following command:
 
 Aborting commit.
 EOF
-                exit 1;
+                exit 1
         fi
 done
-
-
-# If there are whitespace errors, print the offending file names and fail.
-exec git diff-index --check --cached $against --
