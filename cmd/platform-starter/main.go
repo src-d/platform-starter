@@ -34,9 +34,19 @@ func main() {
 	app.Run(os.Args)
 }
 
-var requirements = []string{
-	"csscomb",
-	"editorconfig-tools",
+type requirement struct {
+	pkg    string
+	binary bool
+}
+
+var requirements = []requirement{
+	{"csscomb", true},
+	{"editorconfig-tools", true},
+	{"eslint", true},
+	{"prettier", true},
+	{"eslint-plugin-prettier", false},
+	{"eslint-config-airbnb-base", false},
+	{"eslint-plugin-import", false},
 }
 
 type file struct {
@@ -55,6 +65,7 @@ func (f file) path(root, wd string) string {
 
 var files = []file{
 	{mustAsset(configCsscombJson()), mkPath(".csscomb.json"), false},
+	{mustAsset(configEslintrcJs()), mkPath(".eslintrc.js"), false},
 	{mustAsset(configEditorconfig()), mkPath(".editorconfig"), true},
 	{mustAsset(hooksPreCommit()), mkPath(".git", "hooks", "pre-commit"), true},
 }
@@ -102,12 +113,19 @@ func run(ctx *cli.Context) error {
 	return nil
 }
 
-func ensureInstalled(program string, npm bool) {
-	_, err := exec.LookPath(program)
-	if err != nil {
-		log15.Warn(fmt.Sprintf("Looks like `%s` is not installed", program))
-		if err := install(program, npm); err != nil {
-			log15.Crit(fmt.Sprintf("Unable to install `%s`", program), "err", err)
+func ensureInstalled(r requirement, npm bool) {
+	if r.binary {
+		_, err := exec.LookPath(r.pkg)
+		if err != nil {
+			log15.Warn(fmt.Sprintf("Looks like `%s` is not installed", r.pkg))
+			if err := install(r.pkg, npm); err != nil {
+				log15.Crit(fmt.Sprintf("Unable to install `%s`", r.pkg), "err", err)
+				os.Exit(1)
+			}
+		}
+	} else {
+		if err := install(r.pkg, npm); err != nil {
+			log15.Crit(fmt.Sprintf("Unable to install `%s`", r.pkg), "err", err)
 			os.Exit(1)
 		}
 	}

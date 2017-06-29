@@ -25,6 +25,8 @@ It will install the following things:
 
 * CSSComb config
 * Editorconfig
+* Eslint config
+* CSSComb, Editorconfig, Eslint (with plugins) and Prettier binaries
 * A hook to make sure everything is formatted
 
 If your project is not a git repository it will initialize one.
@@ -45,6 +47,8 @@ platform-starter --npm
 
 * We use **yarn** as package manager. You can use NPM to install global binaries, but installations of specific projects **must** be done with yarn.
 * All other configurations should be installed by this command.
+* All JavaScript code should be formatted using prettier and adhere to the rules defined in the ESLint configuration (airbnb-base with customizations).
+* All CSS code should be formatted using CSSComb with the provided configuration.
 
 ### Editor plugins
 
@@ -52,11 +56,14 @@ platform-starter --npm
 
 * CSSComb: [vim-csscomb](https://github.com/csscomb/vim-csscomb)
 * Editorconfig: [editorconfig-vim](https://github.com/editorconfig/editorconfig-vim)
+* CSSComb and Prettier: [neoformat](https://github.com/sbdchd/neoformat)
+* Prettier: [several options](https://github.com/prettier/prettier/tree/master/editors/vim)
 
 **Visual Studio Code**
 
 * CSSComb: [vscode-csscomb](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-csscomb)
 * Editorconfig: [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-csscomb)
+* Prettier + ESLint: [Prettier ESLint](https://github.com/prettier/prettier/tree/master/editors/vim)
 
 You're welcome to add more editors.
 
