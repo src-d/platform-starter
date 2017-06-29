@@ -21,5 +21,6 @@
     "space-before-closing-brace": "\n",
     "strip-spaces": true,
     "tab-size": true,
-    "unitless-zero": true
+    "unitless-zero": true,
+    "vendor-prefix-align": false
 }
