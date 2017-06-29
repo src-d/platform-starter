@@ -1,0 +1,111 @@
+#!/bin/sh
+
+MODIFIED_FILES=$(git diff --name-only $(git rev-parse HEAD) | grep -v '.svg' | grep -v '.png' | grep -v '.jpg' | grep -v '.snap')
+
+# Check csscomb
+
+CSSCOMB=$(which csscomb 2> /dev/null)
+if [[ -z "$CSSCOMB" ]]; then
+    cat <<\EOF
+Error: csscomb is not installed.
+
+With yarn:
+
+    yarn global add csscomb
+
+With NPM:
+
+    npm install -g csscomb
+
+Aborting commit.
+EOF
+    exit 1
+fi
+
+# there might be multiple subdirectories with multiple csscomb configurations
+for csscomb_config in $(find . -name '.csscomb.json'); do
+    csscomb --config "$csscomb_config" --lint $MODIFIED_FILES
+    if [[ $? -ne 0 ]]; then
+        echo "Error formatting using csscomb, aborting commit."
+        exit 1
+    fi
+done
+
+# Check editorconfig
+
+EDITORCONFIG_TOOLS=$(which editorconfig-tools 2> /dev/null)
+if [[ -z "$EDITORCONFIG_TOOLS" ]]; then
+    cat <<\EOF
+Error: editorconfig-tools is not installed.
+
+With yarn:
+
+    yarn global add editorconfig-tools
+
+With NPM:
+
+    npm install -g editorconfig-tools
+
+Aborting commit.
+EOF
+    exit 1
+fi
+
+for file in $MODIFIED_FILES; do
+    editorconfig-tools check "$file"
+
+    if [[ $? -ne 0 ]]; then
+        cat <<\EOF
+There are misformatted files, please fix them. Remember you can do
+this by just using the following command:
+
+        editorconfig-tools fix path/to/my/files/**/*
+
+Aborting commit.
+EOF
+        exit 1
+    fi
+done
+
+ESLINT=$(which eslint 2> /dev/null)
+if [[ -z "$ESLINT" ]]; then
+    cat <<\EOF
+Error: eslint is not installed.
+
+With yarn:
+
+    yarn global add eslint eslint-config-airbnb-base eslint-plugin-import eslint-plugin-prettier prettier
+
+With NPM:
+
+    npm install -g eslint eslint-config-airbnb-base eslint-plugin-import eslint-plugin-prettier prettier
+
+Aborting commit.
+EOF
+    exit 1
+fi
+
+# there might be multiple subdirectories with multiple eslint configurations
+for eslint_config in $(find . -name '.eslintrc.js'); do
+    eslint -c "$eslint_config" "$(dirname -- "$eslint_config")/**/*.js"
+    if [[ $? -ne 0 ]]; then
+        echo "Errors found according to eslint configuration, aborting commit."
+        exit 1
+    fi
+done
+
+# Optimize SVG images with svgo
+SVGO=$(which svgo 2> /dev/null)
+if [[ -z "$SVGO" ]]; then
+    cat <<\EOF
+EOF
+    exit 1
+fi
+
+for file in $(git diff --name-only $(git rev-parse HEAD) | grep '*.svg'); do
+    svgo --input="$file"
+    if [[ $? -ne 0 ]]; then
+        echo "Errors optimizing svg with svgo, aborting commit."
+        exit 1
+    fi
+done
