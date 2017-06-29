@@ -44,6 +44,7 @@ var requirements = []requirement{
 	{"editorconfig-tools", true},
 	{"eslint", true},
 	{"prettier", true},
+	{"svgo", true},
 	{"eslint-plugin-prettier", false},
 	{"eslint-config-airbnb-base", false},
 	{"eslint-plugin-import", false},

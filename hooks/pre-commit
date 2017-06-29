@@ -93,3 +93,19 @@ for eslint_config in $(find . -name '.eslintrc.js'); do
         exit 1
     fi
 done
+
+# Optimize SVG images with svgo
+SVGO=$(which svgo 2> /dev/null)
+if [[ -z "$SVGO" ]]; then
+    cat <<\EOF
+EOF
+    exit 1
+fi
+
+for file in $(git diff --name-only $(git rev-parse HEAD) | grep '*.svg'); do
+    svgo --input="$file"
+    if [[ $? -ne 0 ]]; then
+        echo "Errors optimizing svg with svgo, aborting commit."
+        exit 1
+    fi
+done
