@@ -71,6 +71,12 @@ var files = []file{
 	{mustAsset(hooksPreCommit()), mkPath(".git", "hooks", "pre-commit"), true},
 }
 
+var gitignore = file{
+	mustAsset(configGitignore()),
+	mkPath(".gitignore"),
+	false,
+}
+
 func run(ctx *cli.Context) error {
 	log15.Info("Starting platform-starter")
 
@@ -85,7 +91,14 @@ func run(ctx *cli.Context) error {
 		os.Exit(1)
 	}
 
-	if !isDir(".git") {
+	dir := ctx.String("dir")
+	dir, err = filepath.Abs(dir)
+	if err != nil {
+		log15.Crit("unable to get absolute path for directory", "dir", dir, "err", err)
+		os.Exit(1)
+	}
+
+	if !isDir(filepath.Join(root, ".git")) {
 		log15.Warn("Current directory is not a git repository.")
 		log15.Info("Initializing git repository...")
 		if err := cmd("git", "init"); err != nil {
@@ -94,11 +107,12 @@ func run(ctx *cli.Context) error {
 		}
 	}
 
-	dir := ctx.String("dir")
-	dir, err = filepath.Abs(dir)
-	if err != nil {
-		log15.Crit("unable to get absolute path for directory", "dir", dir, "err", err)
-		os.Exit(1)
+	if !exists(filepath.Join(dir, ".gitignore")) {
+		log15.Info("Adding default .gitignore")
+		if err := copyFile(root, dir, gitignore); err != nil {
+			log15.Crit("error copying gitignore", "err", err)
+			os.Exit(1)
+		}
 	}
 
 	log15.Info("Copying assets...")
@@ -188,6 +202,11 @@ func isDir(path string) bool {
 	}
 
 	return fi.IsDir()
+}
+
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
 }
 
 func mkPath(args ...string) []string {

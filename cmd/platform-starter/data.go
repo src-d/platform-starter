@@ -3,6 +3,7 @@
 // config/.csscomb.json
 // config/.editorconfig
 // config/.eslintrc.js
+// config/.gitignore
 // hooks/pre-commit
 // DO NOT EDIT!
 
@@ -86,7 +87,7 @@ func configCsscombJson() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "config/.csscomb.json", size: 777, mode: os.FileMode(436), modTime: time.Unix(1498730933, 0)}
+	info := bindataFileInfo{name: "config/.csscomb.json", size: 777, mode: os.FileMode(436), modTime: time.Unix(1498815240, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -106,7 +107,7 @@ func configEditorconfig() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "config/.editorconfig", size: 479, mode: os.FileMode(436), modTime: time.Unix(1498730953, 0)}
+	info := bindataFileInfo{name: "config/.editorconfig", size: 479, mode: os.FileMode(436), modTime: time.Unix(1498815240, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -126,7 +127,27 @@ func configEslintrcJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "config/.eslintrc.js", size: 374, mode: os.FileMode(436), modTime: time.Unix(1498733572, 0)}
+	info := bindataFileInfo{name: "config/.eslintrc.js", size: 374, mode: os.FileMode(436), modTime: time.Unix(1498815240, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _configGitignore = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x64\xcf\x41\x6e\xc4\x20\x0c\x05\xd0\xbd\x4f\x11\x69\x76\x91\x02\x47\x8a\x08\xb8\x94\x19\xf8\x46\xd8\xa4\x9a\xdb\x57\xc9\x74\xd7\x8d\xe5\x67\x79\xf1\xff\x63\x91\x69\x7d\xda\x12\x90\x96\x2a\x59\xc9\xa7\xa2\x46\xde\x5a\x27\x7f\xcc\x52\x13\xf9\x28\x27\x8f\x90\xd9\xaf\x74\xbf\xac\xae\x4a\x26\xc7\x5a\x0b\x2c\x86\xf8\xcd\xe4\x9d\x06\xd5\xed\x03\x7a\x2c\x89\x3b\x23\x31\x62\x61\x25\x0f\x49\xbc\x37\x49\xb3\x5e\x3a\xe4\x87\xc7\x1e\xa5\x75\x01\xc3\x94\x9e\xda\xdb\xde\x43\x7c\x85\xcc\xea\xe9\x6f\xdb\xaa\xc4\x97\x7b\xaa\x80\x5c\x1e\x13\x46\x0e\xbd\x11\x7a\xdb\x12\x1f\x33\x5f\x21\x56\x7a\x87\x81\x7f\xe6\x31\x64\x7c\xec\xee\x43\x81\x71\x1e\xc5\xde\x57\x36\xc6\x59\x86\xa0\x31\x6c\x89\x82\xaf\x72\x75\xc1\x79\x0f\x57\x25\x86\x4a\xbf\x01\x00\x00\xff\xff\xfb\x3e\x0f\x6b\x17\x01\x00\x00")
+
+func configGitignoreBytes() ([]byte, error) {
+	return bindataRead(
+		_configGitignore,
+		"config/.gitignore",
+	)
+}
+
+func configGitignore() (*asset, error) {
+	bytes, err := configGitignoreBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "config/.gitignore", size: 279, mode: os.FileMode(436), modTime: time.Unix(1498815295, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -146,7 +167,7 @@ func hooksPreCommit() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "hooks/pre-commit", size: 2430, mode: os.FileMode(509), modTime: time.Unix(1498740326, 0)}
+	info := bindataFileInfo{name: "hooks/pre-commit", size: 2430, mode: os.FileMode(509), modTime: time.Unix(1498815240, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -206,6 +227,7 @@ var _bindata = map[string]func() (*asset, error){
 	"config/.csscomb.json": configCsscombJson,
 	"config/.editorconfig": configEditorconfig,
 	"config/.eslintrc.js": configEslintrcJs,
+	"config/.gitignore": configGitignore,
 	"hooks/pre-commit": hooksPreCommit,
 }
 
@@ -253,6 +275,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		".csscomb.json": &bintree{configCsscombJson, map[string]*bintree{}},
 		".editorconfig": &bintree{configEditorconfig, map[string]*bintree{}},
 		".eslintrc.js": &bintree{configEslintrcJs, map[string]*bintree{}},
+		".gitignore": &bintree{configGitignore, map[string]*bintree{}},
 	}},
 	"hooks": &bintree{nil, map[string]*bintree{
 		"pre-commit": &bintree{hooksPreCommit, map[string]*bintree{}},
