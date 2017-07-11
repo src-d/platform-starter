@@ -18,7 +18,7 @@ insert_final_newline = false
 [*.{js,ts,jsx,yml,json}]
 indent_size = 2
 
-[*.{diff,md}]
+[*.{diff}]
 trim_trailing_whitespace = false
 
 [*.go]

@@ -68,7 +68,12 @@ var files = []file{
 	{mustAsset(configCsscombJson()), mkPath(".csscomb.json"), false},
 	{mustAsset(configEslintrcJs()), mkPath(".eslintrc.js"), false},
 	{mustAsset(configEditorconfig()), mkPath(".editorconfig"), true},
-	{mustAsset(hooksPreCommit()), mkPath(".git", "hooks", "pre-commit"), true},
+}
+
+var precommitHook = file{
+	mustAsset(hooksPreCommit()),
+	mkPath(".git", "hooks", "pre-commit"),
+	true,
 }
 
 var gitignore = file{
@@ -98,15 +103,6 @@ func run(ctx *cli.Context) error {
 		os.Exit(1)
 	}
 
-	if !isDir(filepath.Join(root, ".git")) {
-		log15.Warn("Current directory is not a git repository.")
-		log15.Info("Initializing git repository...")
-		if err := cmd("git", "init"); err != nil {
-			log15.Crit("unable to initialize git repository", "err", err)
-			os.Exit(1)
-		}
-	}
-
 	if !exists(filepath.Join(dir, ".gitignore")) {
 		log15.Info("Adding default .gitignore")
 		if err := copyFile(root, dir, gitignore); err != nil {
@@ -124,7 +120,38 @@ func run(ctx *cli.Context) error {
 		}
 	}
 
+	if !isDir(filepath.Join(root, ".git")) {
+		if err := initializeGitRepo(); err != nil {
+			log15.Crit("unable to initialize git repo", "err", err)
+			os.Exit(1)
+		}
+	}
+
+	log15.Info("Installing pre-commit hook...")
+	if err := copyFile(root, dir, precommitHook); err != nil {
+		log15.Crit("error copying pre-commit hook", "err", err)
+		os.Exit(1)
+	}
+
 	log15.Info("Everything ready!")
+	return nil
+}
+
+func initializeGitRepo() error {
+	log15.Warn("Current directory is not a git repository.")
+	log15.Info("Initializing git repository...")
+	if err := cmd("git", "init"); err != nil {
+		return err
+	}
+
+	if err := cmd("git", "add", "-A"); err != nil {
+		return fmt.Errorf("unable to add files to repo: %s", err)
+	}
+
+	if err := cmd("git", "commit", "-am", "'initial commit with platform-starter config'"); err != nil {
+		return fmt.Errorf("unable to commit: %s", err)
+	}
+
 	return nil
 }
 
@@ -189,6 +216,7 @@ func copyFile(root, pwd string, file file) error {
 
 func cmd(bin string, args ...string) error {
 	cmd := exec.Command(bin, args...)
+	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Start()

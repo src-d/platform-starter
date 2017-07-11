@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 MODIFIED_FILES=$(git diff --name-only $(git rev-parse HEAD) | grep -v '.svg' | grep -v '.png' | grep -v '.jpg' | grep -v '.snap')
 
